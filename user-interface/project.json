@@ -1,0 +1,9 @@
+{
+  "name": "user-interface",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "user-interface/src",
+  "projectType": "application",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project user-interface --web",
+  "targets": {}
+}
