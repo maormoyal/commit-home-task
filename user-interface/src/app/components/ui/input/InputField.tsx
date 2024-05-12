@@ -1,36 +1,47 @@
+import React from 'react';
 import styles from './InputField.module.scss';
 
-/* eslint-disable-next-line */
-export interface InputProps {
-  label?: string,
-  type: string,
-  name: string,
-  value?: string | number,
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void,
-  placeholder?: string,
-  required?: boolean,
-  errorMessage?: string,
+interface InputProps {
+  label: string;
+  type: string;
+  name: string;
+  value: string | number;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur: (event: React.FocusEvent<HTMLInputElement>) => void;
+  placeholder?: string;
+  required?: boolean;
+  errorMessage?: string;
+  touched?: boolean;
 }
 
-export function InputField(props: InputProps) {
-
-  const { label, type = 'text', name, value, onChange, placeholder, required = false, errorMessage } = props;
-
+export const InputField: React.FC<InputProps> = ({
+  label,
+  type,
+  name,
+  value,
+  onChange,
+  onBlur,
+  placeholder,
+  required = false,
+  errorMessage,
+  touched
+}) => {
   return (
     <div className={styles.inputField}>
-      {label && <label htmlFor={name}>{label}</label>}
+      <label htmlFor={name}>{label}</label>
       <input
         type={type}
-        name={name}
         id={name}
+        name={name}
         value={value}
         onChange={onChange}
+        onBlur={onBlur}
         placeholder={placeholder}
         required={required}
       />
-      {required && !value && <span className="error">{errorMessage || 'This field is required'}</span>}
+      {touched && errorMessage && <span className="error">{errorMessage}</span>}
     </div>
   );
-}
+};
 
 export default InputField;

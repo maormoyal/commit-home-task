@@ -1,49 +1,85 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { FormEvent } from 'react';
 import styles from './Form.module.scss';
 import { InputField } from '../input/InputField';
+import { useFormValidation } from '../../../hooks/useFormValidation';
 
-/* eslint-disable-next-line */
-export interface FormProps { }
+interface FormData {
+  userName: string;
+  phoneNumber: string;
+  password: string;
+  confirmPassword: string;
+}
 
-export function Form(props: FormProps) {
-  const [formData, setFormData] = useState({
-    userName: '',
-    phoneNumber: '',
-    password: '',
-    confirmPassword: ''
-  });
+const initialValues: FormData = {
+  userName: '',
+  phoneNumber: '',
+  password: '',
+  confirmPassword: ''
+};
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+const validators = {
+  userName: (value: string) => {
+    if (!value) return "User name is required";
+    if (value.length > 32) return "User name must be up to 32 characters";
+    return undefined;
+  },
+  phoneNumber: (value: string) => {
+    if (value && !/^\d{10}$/.test(value)) return "Phone number must be exactly 10 digits";
+    return undefined;
+  },
+  password: (value: string) => {
+    if (!value) return "Password is required";
+    if (value.length < 6 || value.length > 12) return "Password must be 6-12 characters";
+    if (!/[A-Z]/.test(value) || !/[!@#$&*]/.test(value)) return "Password must include an uppercase letter and a special character";
+    return undefined;
+  },
+  confirmPassword: (value: string, formData?: FormData) => {  // Allow formData to be optional
+    if (!formData) return undefined;  // Handle the case where formData might be undefined
+    if (value !== formData.password) return "Passwords do not match";
+    return undefined;
+  }
+};
+
+
+export function Form() {
+  const {
+    formData,
+    handleChange,
+    handleBlur,
+    errors,
+    isFormValid,
+    touched
+  } = useFormValidation<FormData>(initialValues, validators);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Form Data Submitted:', formData);
+    if (isFormValid) {
+      console.log('Form Data Submitted:', formData);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} noValidate >
+    <form onSubmit={handleSubmit} noValidate className={styles.form}>
       <InputField
         label="User Name"
         type="text"
-        name="user-name"
+        name="userName"
         value={formData.userName}
         onChange={handleChange}
-        placeholder="Enter your username"
+        onBlur={handleBlur}
+        errorMessage={errors.userName}
+        touched={touched.userName}
         required={true}
       />
       <InputField
         label="Phone Number"
         type="text"
-        name="phone-number"
+        name="phoneNumber"
         value={formData.phoneNumber}
         onChange={handleChange}
-        placeholder="Enter your username"
-        required={true}
+        onBlur={handleBlur}
+        errorMessage={errors.phoneNumber}
+        touched={touched.phoneNumber}
       />
       <InputField
         label="Password"
@@ -51,21 +87,23 @@ export function Form(props: FormProps) {
         name="password"
         value={formData.password}
         onChange={handleChange}
-        placeholder="Enter your password"
+        onBlur={handleBlur}
+        errorMessage={errors.password}
+        touched={touched.password}
         required={true}
-        errorMessage="Password is required"
       />
       <InputField
         label="Confirm Password"
         type="password"
-        name="password"
+        name="confirmPassword"
         value={formData.confirmPassword}
         onChange={handleChange}
-        placeholder="Enter your password"
+        onBlur={handleBlur}
+        errorMessage={errors.confirmPassword}
+        touched={touched.confirmPassword}
         required={true}
-        errorMessage="Password is required"
       />
-      <button className={styles.submitBtn} type="submit">Submit</button>
+      <button type="submit" disabled={!isFormValid} className={styles.submitBtn}>Submit</button>
     </form>
   );
 }
