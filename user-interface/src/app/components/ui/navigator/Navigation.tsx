@@ -1,12 +1,23 @@
 import styles from './Navigation.module.scss';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 function Navigation() {
+
+  const location = useLocation();
+
+  const checkActive = (path: string): string => {
+    return location.pathname === path ? styles.active : '';
+  };
+
   return (
-    <nav>
+    <nav className={styles.nav}>
       <ul>
-        <li><Link to="/">FORM</Link></li>
-        <li><Link to="/user">USER</Link></li>
+        <li>
+          <Link to="/" className={checkActive('/')}>FORM</Link>
+        </li>
+        <li>
+          <Link to="/user" className={checkActive('/user')}>USER</Link>
+        </li>
       </ul>
     </nav>
   );

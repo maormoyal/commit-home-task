@@ -1,7 +1,35 @@
-/*
- * Replace this with your own classes
- *
- * e.g.
- * .container {
- * }
-*/
+nav {
+  display: block;
+  background: #ffffff;
+  padding: 20px 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: start;
+  }
+
+  li {
+    margin-right: 20px;
+  }
+
+  a {
+    text-decoration: none;
+    color: #000000;
+    font-size: 16px;
+    padding-bottom: 19px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      color: #0056b3;
+    }
+
+    &.active {
+      border-bottom: 2px solid #0056b3;
+    }
+  }
+}
