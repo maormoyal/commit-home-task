@@ -1,6 +1,6 @@
 import React, { FormEvent } from 'react';
 import styles from './Form.module.scss';
-import { InputField } from '../input/InputField';
+import InputField from '../input/InputField';
 import { useFormValidation } from '../../../hooks/useFormValidation';
 
 interface FormData {
@@ -24,6 +24,7 @@ const validators = {
     return undefined;
   },
   phoneNumber: (value: string) => {
+    if (!value) return "Phone number is required";
     if (value && !/^\d{10}$/.test(value)) return "Phone number must be exactly 10 digits";
     return undefined;
   },
@@ -33,8 +34,8 @@ const validators = {
     if (!/[A-Z]/.test(value) || !/[!@#$&*]/.test(value)) return "Password must include an uppercase letter and a special character";
     return undefined;
   },
-  confirmPassword: (value: string, formData?: FormData) => {  // Allow formData to be optional
-    if (!formData) return undefined;  // Handle the case where formData might be undefined
+  confirmPassword: (value: string, formData?: FormData) => {
+    if (!formData) return undefined;
     if (value !== formData.password) return "Passwords do not match";
     return undefined;
   }
@@ -44,17 +45,23 @@ const validators = {
 export function Form() {
   const {
     formData,
+    setFormData,
     handleChange,
     handleBlur,
     errors,
     isFormValid,
-    touched
+    touched,
+    setTouched,
   } = useFormValidation<FormData>(initialValues, validators);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isFormValid) {
       console.log('Form Data Submitted:', formData);
+      // Reset the form fields
+      setFormData(initialValues);
+      // Optionally reset the touched state if you want to clear all 'touched' flags
+      setTouched({});
     }
   };
 
@@ -80,6 +87,7 @@ export function Form() {
         onBlur={handleBlur}
         errorMessage={errors.phoneNumber}
         touched={touched.phoneNumber}
+        required={true}
       />
       <InputField
         label="Password"

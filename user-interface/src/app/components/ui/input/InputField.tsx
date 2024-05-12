@@ -14,7 +14,7 @@ interface InputProps {
   touched?: boolean;
 }
 
-export const InputField: React.FC<InputProps> = ({
+const InputField: React.FC<InputProps> = ({
   label,
   type,
   name,
@@ -39,7 +39,7 @@ export const InputField: React.FC<InputProps> = ({
         placeholder={placeholder}
         required={required}
       />
-      {touched && errorMessage && <span className="error">{errorMessage}</span>}
+      {touched && errorMessage && <span className={styles.error}>{errorMessage}</span>}
     </div>
   );
 };

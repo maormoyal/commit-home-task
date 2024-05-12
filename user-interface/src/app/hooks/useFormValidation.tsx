@@ -1,6 +1,6 @@
 import { useState, useEffect, ChangeEvent, FocusEvent } from 'react';
 
-function useFormValidation<T extends Record<string, any>>(
+function useFormValidation<T extends { [key: string]: any }>(
     initialValues: T,
     validators: { [K in keyof T]: (value: T[K], formData?: T) => string | undefined }
 ) {
@@ -22,7 +22,7 @@ function useFormValidation<T extends Record<string, any>>(
         });
         setErrors(newErrors);
         setIsFormValid(allValid);
-    }, [formData, touched]);
+    }, [formData, touched, validators]);
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
@@ -34,7 +34,7 @@ function useFormValidation<T extends Record<string, any>>(
         setTouched(prev => ({ ...prev, [name]: true }));
     };
 
-    return { formData, handleChange, handleBlur, errors, isFormValid, touched };
+    return { formData, setFormData, handleChange, handleBlur, errors, isFormValid, touched, setTouched };
 }
 
 export { useFormValidation };
