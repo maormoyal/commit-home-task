@@ -2,15 +2,10 @@ import { FormEvent } from 'react';
 import styles from './Form.module.scss';
 import InputField from '../input/InputField';
 import { useFormValidation } from '../../../hooks/useFormValidation';
+import { useFormData } from '../../../store/formDataSlice';
+import { IFormData } from '../../../types/formDataTypes';
 
-interface FormData {
-  userName: string;
-  phoneNumber: string;
-  password: string;
-  confirmPassword: string;
-}
-
-const initialValues: FormData = {
+const initialValues: IFormData = {
   userName: '',
   phoneNumber: '',
   password: '',
@@ -34,7 +29,7 @@ const validators = {
     if (!/[A-Z]/.test(value) || !/[!@#$&*]/.test(value)) return "Password must include an uppercase letter and a special character";
     return undefined;
   },
-  confirmPassword: (value: string, formData?: FormData) => {
+  confirmPassword: (value: string, formData?: IFormData) => {
     if (!formData) return undefined;
     if (value !== formData.password) return "Passwords do not match";
     return undefined;
@@ -43,6 +38,9 @@ const validators = {
 
 
 export function Form() {
+
+  const { setFormDataSlice } = useFormData();
+
   const {
     formData,
     setFormData,
@@ -52,12 +50,13 @@ export function Form() {
     isFormValid,
     touched,
     setTouched,
-  } = useFormValidation<FormData>(initialValues, validators);
+  } = useFormValidation<IFormData>(initialValues, validators);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isFormValid) {
       console.log('Form Data Submitted:', formData);
+      setFormDataSlice(formData);
       setFormData(initialValues);
       setTouched({});
     }
