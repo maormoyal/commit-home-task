@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-// Define a generic type for the form data, specifying that values can be string, number, or boolean
-function useFormValidation<T extends Record<string, string | number | boolean>>(
+function useFormValidation<T extends Record<string, any>>(
     initialValues: T,
     validators: { [K in keyof T]: (value: T[K], formData?: T) => string | undefined }
 ) {
@@ -13,9 +12,9 @@ function useFormValidation<T extends Record<string, string | number | boolean>>(
     const validateForm = useCallback((data: T) => {
         const newErrors: { [K in keyof T]?: string } = {};
         let allValid = true;
-        Object.keys(data).forEach(key => {
+        Object.keys(data as object).forEach(key => {
             const field = key as keyof T;
-            if (touched[field] || Object.keys(touched).length === 0) { // Check on initial load or when field is touched
+            if (touched[field] || Object.keys(touched).length === 0) {
                 const error = validators[field](data[field], data);
                 newErrors[field] = error;
                 if (error) allValid = false;

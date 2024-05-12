@@ -1,4 +1,4 @@
-import React, { FormEvent } from 'react';
+import { FormEvent } from 'react';
 import styles from './Form.module.scss';
 import InputField from '../input/InputField';
 import { useFormValidation } from '../../../hooks/useFormValidation';
@@ -25,7 +25,7 @@ const validators = {
   },
   phoneNumber: (value: string) => {
     if (!value) return "Phone number is required";
-    if (value && !/^\d{10}$/.test(value)) return "Phone number must be exactly 10 digits";
+    if (!/^\d{10}$/.test(value)) return "Phone number must be exactly 10 digits";
     return undefined;
   },
   password: (value: string) => {
@@ -58,9 +58,7 @@ export function Form() {
     e.preventDefault();
     if (isFormValid) {
       console.log('Form Data Submitted:', formData);
-      // Reset the form fields
       setFormData(initialValues);
-      // Optionally reset the touched state if you want to clear all 'touched' flags
       setTouched({});
     }
   };
