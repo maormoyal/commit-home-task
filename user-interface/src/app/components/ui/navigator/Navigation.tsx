@@ -12,11 +12,11 @@ function Navigation() {
   return (
     <nav className={styles.nav}>
       <ul>
-        <li>
-          <Link to="/" className={checkActive('/')}>FORM</Link>
+        <li className={checkActive('/')}>
+          <Link to="/">form</Link>
         </li>
-        <li>
-          <Link to="/user" className={checkActive('/user')}>USER</Link>
+        <li className={checkActive('/user')}>
+          <Link to="/user">user</Link>
         </li>
       </ul>
     </nav>
